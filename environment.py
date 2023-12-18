@@ -2,9 +2,12 @@ import numpy as np
 import random
 
 class Environment:
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, render_on):
         self.grid_size = grid_size
         self.grid = []
+        self.render_on = render_on
+        self.agent_location = None
+        self.goal_location = None
 
     def _random_loc(self):
         # Get a random location
@@ -15,6 +18,17 @@ class Environment:
     def reset(self):
         # Initialize the empty grid as a 2D list of 0s
         self.grid = np.zeros((self.grid_size, self.grid_size))
+
+        # Add the agent and goal
+        self.agent_location = self.add_agent()
+        self.goal_location = self.add_goal()
+
+        if self.render_on:
+            self.render()
+
+        # Return the current state
+
+        return self.get_state()
 
     def add_agent(self):
         # Select a random location
@@ -47,11 +61,13 @@ class Environment:
             print(row)
         print('')
 
-env = Environment(grid_size=5) 
+    def get_state(self):
+        # Return the current state
+        state = self.grid.flatten()
+        return state
+
+env = Environment(grid_size=5, render_on=True) 
 env.reset()
-agent_location = env.add_agent()
-goal_location = env.add_goal()
-env.render()
 
 
 print(f'Agent Location: {agent_location}')
